@@ -1,0 +1,25 @@
+{
+  "author": "dosymep",
+  "name": "Revit Plugin Template",
+  "description": "Revit Plugin Template",
+  "identity": "dosymep.RevitPluginTemplate",
+  "shortName": "revitplugin",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "RevitPluginTemplate",
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net48"
+        }
+      ],
+      "defaultValue": "net48"
+    }
+  }
+}
