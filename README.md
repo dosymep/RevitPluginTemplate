@@ -17,4 +17,4 @@
 
 ### Если не используете DevExpress:  
 1. Удалите из файла проекта импорт свойств DevExpress.  
-1. Замените родительский класс в MainView на PlatformWindow.  
+1. Замените родительский класс в MainWindow на PlatformWindow.  
