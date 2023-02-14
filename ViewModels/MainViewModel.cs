@@ -6,12 +6,14 @@ using RevitPluginTemplate.Models;
 
 namespace RevitPluginTemplate.ViewModels {
     internal class MainViewModel : BaseViewModel {
-        private readonly RevitRepository _revitRepository;
-		
+		private readonly RevitRepository _revitRepository;
+        private readonly RevitPluginTemplateConfig _revitPluginTemplateConfig;
+
         private string _errorText;
 
-        public MainViewModel(UIApplication uiApplication) {
-            _revitRepository = new RevitRepository(uiApplication);
+        public MainViewModel(RevitRepository revitRepository, RevitPluginTemplateConfig revitPluginTemplateConfig) {
+            _revitRepository = revitRepository;
+            _revitPluginTemplateConfig = revitPluginTemplateConfig;
         }
 
         public string ErrorText {

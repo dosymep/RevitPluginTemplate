@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -12,9 +13,13 @@ using dosymep;
 using dosymep.Bim4Everyone;
 using dosymep.SimpleServices;
 
+using Ninject;
+
 using RevitPluginTemplate.Models;
 using RevitPluginTemplate.ViewModels;
 using RevitPluginTemplate.Views;
+
+using Application = Autodesk.Revit.ApplicationServices.Application;
 
 namespace RevitPluginTemplate {
     [Transaction(TransactionMode.Manual)]
@@ -24,19 +29,38 @@ namespace RevitPluginTemplate {
         }
 
         protected override void Execute(UIApplication uiApplication) {
-            var window = new MainWindow() {
-				Title = PluginName,
-				DataContext = new MainViewModel(uiApplication)};
-            
-			if(window.ShowDialog() == true) {
-                GetPlatformService<INotificationService>()
-                    .CreateNotification(PluginName, "Выполнение скрипта завершено успешно.", "C#")
-                    .ShowAsync();
-            } else {
-                GetPlatformService<INotificationService>()
-                    .CreateWarningNotification(PluginName, "Выполнение скрипта отменено.")
-                    .ShowAsync();
-            }
+			using(IKernel kernel = new StandardKernel()) {
+                kernel.Bind<UIApplication>()
+                    .ToConstant(uiApplication)
+                    .InTransientScope();
+                kernel.Bind<Application>()
+                    .ToConstant(uiApplication.Application)
+                    .InTransientScope();
+
+                kernel.Bind<RevitRepository>()
+                    .ToSelf()
+                    .InSingletonScope();
+					
+				kernel.Bind<RevitPluginTemplateConfig>()
+                    .ToMethod(c => RevitPluginTemplateConfig.GetCheckingLevelConfig());
+				
+				kernel.Bind<MainViewModel>().ToSelf();
+				kernel.Bind<MainWindow>().ToSelf()
+                    .WithPropertyValue(nameof(Window.Title), PluginName)
+                    .WithPropertyValue(nameof(Window.DataContext),
+                        c => c.Kernel.Get<MainViewModel>());
+				
+				MainWindow window = kernel.Get<MainWindow>();
+				if(window.ShowDialog() == true) {
+					GetPlatformService<INotificationService>()
+						.CreateNotification(PluginName, "Выполнение скрипта завершено успешно.", "C#")
+						.ShowAsync();
+				} else {
+					GetPlatformService<INotificationService>()
+						.CreateWarningNotification(PluginName, "Выполнение скрипта отменено.")
+						.ShowAsync();
+				}
+			}
         }
     }
 }
