@@ -10,7 +10,7 @@ namespace RevitPluginTemplate.Models {
 
         [JsonIgnore] public override IConfigSerializer Serializer { get; set; }
 
-        public static RevitPluginTemplateConfig GetCheckingLevelConfig() {
+        public static RevitPluginTemplateConfig GetRevitPluginTemplateConfig() {
             return new ProjectConfigBuilder()
                 .SetSerializer(new ConfigSerializer())
                 .SetPluginName(nameof(RevitPluginTemplate))

@@ -42,7 +42,7 @@ namespace RevitPluginTemplate {
                     .InSingletonScope();
 					
 				kernel.Bind<RevitPluginTemplateConfig>()
-                    .ToMethod(c => RevitPluginTemplateConfig.GetCheckingLevelConfig());
+                    .ToMethod(c => RevitPluginTemplateConfig.GetRevitPluginTemplateConfig());
 				
 				kernel.Bind<MainViewModel>().ToSelf();
 				kernel.Bind<MainWindow>().ToSelf()
